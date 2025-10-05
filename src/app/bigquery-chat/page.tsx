@@ -1,4 +1,5 @@
 import BigQueryChat from '@/components/BigQueryChat';
+import React from 'react';
 
 export const metadata = {
   title: 'BigQuery Chat | Tailwind Admin',
