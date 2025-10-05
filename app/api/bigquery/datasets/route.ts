@@ -1,8 +1,8 @@
 // app/api/bigquery/datasets/route.ts
 import { NextRequest, NextResponse } from 'next/server';
 
-const RAILWAY_API_URL = process.env.RAILWAY_API_URL || 'https://bigquery-mcp-sse-production.up.railway.app';
-const RAILWAY_API_KEY = process.env.RAILWAY_API_KEY || 'bq_secure_key_2024_f8a3c9d1e5b7';
+const RAILWAY_API_URL = process.env.RAILWAY_API_URL;
+const RAILWAY_API_KEY = process.env.RAILWAY_API_KEY;
 
 export async function GET(request: NextRequest) {
   try {
