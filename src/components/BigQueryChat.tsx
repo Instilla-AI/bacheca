@@ -4,6 +4,8 @@
 import { useState, useEffect, useRef } from 'react';
 import { Send, Database, Settings, Loader2 } from 'lucide-react';
 
+type DataRow = Record<string, unknown>;
+
 interface Dataset {
   project_id: string;
   dataset_id: string;
@@ -15,7 +17,7 @@ interface Message {
   role: 'user' | 'assistant' | 'system';
   content: string;
   sql?: string;
-  data?: any[];
+  data?: DataRow[];
   row_count?: number;
   model_used?: string;
   timestamp: string;
@@ -187,15 +189,19 @@ export default function BigQueryChat() {
               <span className="text-sm text-gray-700">Provider</span>
               <select
                 value={modelConfig.provider}
-                onChange={(e) => setModelConfig({
-                  ...modelConfig,
-                  provider: e.target.value as any,
-                  model_name: e.target.value === 'claude' 
-                    ? 'claude-3-5-sonnet-20241022'
-                    : e.target.value === 'openai'
-                    ? 'gpt-4'
-                    : 'gemini-pro'
-                })}
+                onChange={(e: React.ChangeEvent<HTMLSelectElement>) => {
+                  const provider = e.target.value as ModelConfig['provider'];
+                  setModelConfig({
+                    ...modelConfig,
+                    provider,
+                    model_name:
+                      provider === 'claude'
+                        ? 'claude-3-5-sonnet-20241022'
+                        : provider === 'openai'
+                        ? 'gpt-4'
+                        : 'gemini-pro',
+                  });
+                }}
                 className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
               >
                 <option value="claude">Claude (Anthropic)</option>
@@ -334,9 +340,9 @@ export default function BigQueryChat() {
                       <tbody className="divide-y">
                         {message.data.slice(0, 10).map((row, i) => (
                           <tr key={i}>
-                            {Object.values(row).map((value: any, j) => (
+                            {Object.values(row as DataRow).map((value: unknown, j) => (
                               <td key={j} className="px-4 py-2 text-gray-900">
-                                {value?.toString() || '-'}
+                                {value == null ? '-' : String(value)}
                               </td>
                             ))}
                           </tr>
